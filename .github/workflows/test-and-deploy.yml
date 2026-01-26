@@ -1,52 +1,45 @@
-name:CI/CD Workflow
+name: CI/CD Workflow
 
 on:
   push:
     branches:
       - "*"
+
 jobs:
-   test:
-       runs-on: ubuntu-latest
-   steps:
-     - name: Checkout code
-       uses: actions/checkout@v2
-     - name: Setup PHP
-       uses: shivammathur/setup-php@v2
-       with:
-         php-version: '8.0'
-         extensions: gd
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3 # バージョンを上げました
 
-    - name: Install Composer Dependencies
-       run: composer install --no-progress --no-suggest --prefer-dist
-       working-directory: ./
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+          extensions: gd, mbstring, xml, ctype, iconv # Laravel等で必要な基本拡張を追加
 
-    - name: Copy env.testing file
-      if: always()
-      run: cp ./.env.example ./.env
-      working-directory: ./
+      - name: Install Composer Dependencies
+        run: composer install --no-progress --prefer-dist
 
-    - name: Clear Application Cache
-      if: always()
-      run: php artisan cache:clear
-      working-directory: ./
-      jobs:
+      - name: Prepare Environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate
 
-    - name: Check with PHPStan
-      if: always()
-      run: vendor/bin/phpstan analyse --error-format=github --configuration=phpstan.neon
-      working-directory: ./
-      jobs:
+      - name: Clear Application Cache
+        run: php artisan cache:clear
 
-    - name: Run Unit Tests
-      if: always()
-      run: vendor/bin/phpunit --coverage-html tests/Report
-      working-directory: ./
-      jobs:
+      - name: Check with PHPStan
+        # 失敗しても次に進ませたい場合は continue-on-error: true を使います
+        run: vendor/bin/phpstan analyse --error-format=github --configuration=phpstan.neon
 
-    - name: Upload Coverage Report
-      if: always()
-      uses: actions/upload-artifact@v2
-      with:
-      name: coverage
-      path: ./tests/Report/*
-      retention-days: 7
+      - name: Run Unit Tests
+        run: vendor/bin/phpunit --coverage-html tests/Report
+
+      - name: Upload Coverage Report
+        if: always() # テストが失敗してもレポートは保存する
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage
+          path: tests/Report/
+          retention-days: 7

@@ -1,4 +1,4 @@
-name: CI/CD with MySQL
+name: CI/CD with MySQL #
 
 on:
   push:

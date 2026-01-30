@@ -1,4 +1,4 @@
-name: CI/CD with MySQL #
+name: CI/CD with MySQL
 
 on:
   push:
@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -45,7 +45,7 @@ jobs:
 
       - name: Upload Coverage Report
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: coverage
           path: ./tests/Report/*
@@ -74,10 +74,10 @@ jobs:
           aws-region: ap-northeast-1
 
       - name: Upload source to S3
-        run: aws s3 cp todo_${{ github.run_id }}.zip s3://todo-revision-bucket --quiet
+        run: aws s3 cp todo_${{ github.run_id }}.zip s3://todo-bucket-revision --quiet
 
       - name: Registration app to CodeDeploy
-        run: aws deploy register-application-revision --application-name todo --s3-location bucket=todo-revision-bucket,bundleType="zip",key=todo_${{ github.run_id }}.zip
+        run: aws deploy register-application-revision --application-name todo --s3-location bucket=todo-bucket-revision,bundleType="zip",key=todo_${{ github.run_id }}.zip
 
       - name: Deploy app to EC2
-        run: aws deploy create-deployment --application-name todo --deployment-group-name todoDeployGroup --file-exists-behavior "OVERWRITE" --s3-location bucket=todo-revision-bucket,bundleType="zip",key=todo_${{ github.run_id }}.zip
+        run: aws deploy create-deployment --application-name todo --deployment-group-name todoDeployGroup --file-exists-behavior "OVERWRITE" --s3-location bucket=todo-bucket-revision,bundleType="zip",key=todo_${{ github.run_id }}.zip

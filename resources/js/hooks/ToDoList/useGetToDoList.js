@@ -2,7 +2,7 @@ import axios from "axios";
 import { useQuery, useQueryClient } from "react-query";
 
 const getToDoList = async () => {
-  const { data } = await axios.get("/api/toDos");
+  const { data } = await axios.get("/todo/api/toDos");
   return data;
 };
 

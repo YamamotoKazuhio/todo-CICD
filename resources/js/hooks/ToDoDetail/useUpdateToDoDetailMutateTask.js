@@ -5,7 +5,7 @@ const useUpdateToDoDetailMutateTask = () => {
   const queryClient = useQueryClient();
   const updateToDoDetailMutation = useMutation(
     (toDoDetail) =>
-      axios.put("/api/toDoDetails/" + toDoDetail.id, {
+      axios.put("/todo/api/toDoDetails/" + toDoDetail.id, {
         name: toDoDetail.name,
         completed_flag: toDoDetail.completed_flag,
       }),

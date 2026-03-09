@@ -52,10 +52,11 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
-
-    'asset_url' => env('ASSET_URL', null),
-
+    'url' => (isset($_SERVER['APP_GLOBAL_BASE_URL']) 
+                ? rtrim($_SERVER['APP_GLOBAL_BASE_URL'], '/') 
+                : rtrim(env('APP_URL', 'http://localhost'), '/')) 
+             . '/' . basename(base_path()),
+    
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
@@ -67,7 +68,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Tokyo',
 
     /*
     |--------------------------------------------------------------------------

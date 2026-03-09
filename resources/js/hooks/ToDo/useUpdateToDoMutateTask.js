@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from "react-query";
 const useUpdateToDoMutateTask = () => {
   const queryClient = useQueryClient();
   const updateToDoMutation = useMutation(
-    (toDo) => axios.put("/api/toDos/" + toDo.id, { title: toDo.title }),
+    (toDo) => axios.put("/todo/api/toDos/" + toDo.id, { title: toDo.title }),
     {
       onMutate: async (toDo) => {
         // 実行中の取得処理をキャンセル

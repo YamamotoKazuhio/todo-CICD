@@ -5,7 +5,7 @@ const useStoreToDoMutateTask = () => {
   const queryClient = useQueryClient();
   const storeToDoMutation = useMutation(
     () =>
-      axios.post("/api/toDos", {
+      axios.post("/todo/api/toDos", {
         title: null,
       }),
     {

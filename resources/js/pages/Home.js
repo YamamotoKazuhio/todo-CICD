@@ -7,42 +7,44 @@ import { useCurrentToDoList, useGetToDoList } from "../hooks/ToDoList";
 
 /** スタイル */
 const fabStyle = {
-  position: "fixed",
-  bottom: 16,
-  right: 16,
+    position: "fixed",
+    bottom: 16,
+    right: 16,
 };
 
 function Home() {
-  /** ToDo追加イベント */
-  const { storeToDoMutation } = useStoreToDoMutateTask();
-  const eventStoreTodo = (event) => {
-    storeToDoMutation.mutate();
-  };
+    /** ToDo追加イベント */
+    const { storeToDoMutation } = useStoreToDoMutateTask();
+    const eventStoreTodo = (event) => {
+        storeToDoMutation.mutate();
+    };
 
-  const { isLoading } = useGetToDoList();
-  const toDoList = useCurrentToDoList();
+    const { isLoading } = useGetToDoList();
+    const toDoList = useCurrentToDoList();
 
-  if (isLoading) return "Loading...";
+    if (isLoading) return "Loading...";
 
-  return (
-    <div>
-      <Grid container spacing={6}>
-        {toDoList.map((toDo) => (
-          <Grid item key={toDo.id} xs={12} sm={6} md={4} xl={3}>
-            <ToDo toDo={toDo} />
+    return (
+      <div>
+          <Grid container spacing={2}>
+              {/* toDoList && を追加して、データがある時だけ map を回す */}
+              {toDoList &&
+                  toDoList.map((toDo) => (
+                      <Grid item key={toDo.id} xs={12} sm={6} md={4} xl={3}>
+                          <ToDo toDo={toDo} />
+                      </Grid>
+                  ))}
           </Grid>
-        ))}
-      </Grid>
-      <Fab
-        color="primary"
-        aria-label="add"
-        sx={fabStyle}
-        onClick={eventStoreTodo}
-      >
-        <AddIcon />
-      </Fab>
-    </div>
-  );
+          <Fab
+              color="primary"
+              aria-label="add"
+              sx={fabStyle}
+              onClick={eventStoreTodo}
+          >
+          <AddIcon />
+          </Fab>
+        </div>
+    );
 }
 
 export default Home;

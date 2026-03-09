@@ -5,7 +5,7 @@ const useDeleteToDoDetailMutateTask = () => {
   const queryClient = useQueryClient();
   const deleteToDoDetailMutation = useMutation(
     (toDoDetail) =>
-      axios.delete("/api/toDoDetails/" + toDoDetail.id),
+      axios.delete("/todo/api/toDoDetails/" + toDoDetail.id),
     {
       onMutate: async (toDoDetail) => {
         // 実行中の取得処理をキャンセル
